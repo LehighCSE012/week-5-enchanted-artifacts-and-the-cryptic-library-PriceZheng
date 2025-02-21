@@ -1,6 +1,6 @@
-"""Week 5 coding assignment: Enhance the text-based 
-adventure game by using dictionaries to manage enchanted 
-artifacts and sets to handle unique clues in a cryptic 
+"""Week 5 coding assignment: Enhance the text-based
+adventure game by using dictionaries to manage enchanted
+artifacts and sets to handle unique clues in a cryptic
 library."""
 import random
 
@@ -10,7 +10,7 @@ def discover_artifact(player_stats, artifacts, artifact_name):
         artifact = artifacts.pop(artifact_name) #Pop the artifact and save it
         print(f"You discover the {artifact_name}: {artifact['description']}")
         effect = artifact.get('effect') #Using get() to aviod keyError
-        if effect == "increases health": 
+        if effect == "increases health":
             #Using update() to update health
             player_stats.update({'health': player_stats['health'] + artifact['power']})
         elif effect == "enhances attack":
@@ -19,7 +19,7 @@ def discover_artifact(player_stats, artifacts, artifact_name):
     else:
         print("You found nothing of interest.")
     return player_stats, artifacts
-    
+
 def find_clue(clues, new_clue):
     """Checks if new_clue is already in the clues set using the in operator."""
     if new_clue in clues:
@@ -124,7 +124,7 @@ def handle_trap(player_stats, challenge_outcome):
         else:
             print(challenge_outcome[1])
             player_stats['health'] += challenge_outcome[2]
-    return player_stats   
+    return player_stats
 
 def enter_dungeon(player_stats, inventory, dungeon_rooms, clues):
     """Iterates through each room in dungeon_rooms."""
@@ -160,8 +160,8 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues):
             if "staff_of_wisdom" in inventory:
                 print("With the Staff of Wisdom, you understand the clues and can bypass a puzzle or a trap later!")
                 bypass = input("Enter the name of the room you want to bypass: ").strip()
-        
-        
+
+
         if challenge_type == "puzzle":
             if bypass in room_description:
                 print("You use your wisdom to bypass the puzzle in this room!")
@@ -184,7 +184,7 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues):
     display_player_status(player_stats['health'])
     #Values(), get values, it it nor necessary to use it here, just use it
     print("Player Final Stats:", list(player_stats.values()))
-    
+
     return player_stats, inventory
 
 def main():
@@ -210,7 +210,7 @@ def main():
         "effect": "solves puzzles"
     }
     }
-    
+
 
     dungeon_rooms = [
 
@@ -238,13 +238,13 @@ def main():
 
     print(f"Starting Health: {player_stats['health']}, Attack: {player_stats['attack']}")
     player_stats = combat_encounter(player_stats, monster_health, has_treasure)
-    
+
     if random.random() < 0.3 and artifacts:
         artifact_name = random.choice(list(artifacts.keys()))
         player_stats, artifacts = discover_artifact(player_stats, artifacts, artifact_name)
-    
+
     player_stats, inventory, clues = enter_dungeon(player_stats, inventory, dungeon_rooms, clues)
-    
+
     print("\n--- Game End ---")
     print(f"Final Health: {player_stats['health']}, Attack: {player_stats['attack']}")
     print(f"Final Inventory: {inventory}")
