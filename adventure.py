@@ -173,12 +173,7 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues, artifacts):
         bypass = None
         room_description, item, challenge_type, challenge_outcome = room
         print(f"{room_description}")
-        
-        #For pass the test
-        if random.random() < 0.3 and artifacts:
-            # randomly choose a unknow artifacts
-            artifact_name = random.choice(list(artifacts.keys()))
-            player_stats, artifacts = discover_artifact(player_stats, artifacts, artifact_name)
+
         #Demonstrating tuple is immutability
         try:
             raise TypeError("Tuples are immutable and cannot be modified!")
