@@ -162,7 +162,7 @@ def handle_challenge(player_stats, challenge_type, challenge_outcome, room_descr
 
     return player_stats
 
-def enter_dungeon(player_stats, inventory, dungeon_rooms, clues, artifacts):
+def enter_dungeon(player_stats, inventory, dungeon_rooms, clues):
     """Iterates through each room in dungeon_rooms."""
     for room in dungeon_rooms:
         #Tuple unpacking
