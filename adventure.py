@@ -126,7 +126,7 @@ def handle_trap(player_stats, challenge_outcome):
             player_stats['health'] += challenge_outcome[2]
     return player_stats
 
-def handle_library(player_stats, inventory, clues):
+def handle_library(inventory, clues):
     """Handle library"""
     possible_clues = [
         "The treasure is hidden where the dragon sleeps.",
@@ -196,7 +196,7 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues):
         display_inventory(inventory)
         display_player_status(player_stats['health'])
         print("Player Final Stats:", list(player_stats.values()))
-        return player_stats, inventory
+        return player_stats, inventory, clues
 
 def main():
     """Initializes game variables and runs the adventure game."""
