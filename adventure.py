@@ -164,6 +164,7 @@ def handle_challenge(player_stats, challenge_type, challenge_outcome, room_descr
 
 def enter_dungeon(player_stats, inventory, dungeon_rooms, clues,artifacts):
     """Iterates through each room in dungeon_rooms."""
+    del artifacts # idk how to use it
     for room in dungeon_rooms:
         #Tuple unpacking
         if len(room) == 4:
