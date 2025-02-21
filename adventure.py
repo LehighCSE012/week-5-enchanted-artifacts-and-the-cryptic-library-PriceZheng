@@ -126,7 +126,23 @@ def handle_trap(player_stats, challenge_outcome):
             player_stats['health'] += challenge_outcome[2]
     return player_stats
 
-def enter_dungeon(player_stats, inventory, dungeon_rooms, clues):
+def handle_library(player_stats, inventory, clues):
+    possible_clues = [
+        "The treasure is hidden where the dragon sleeps.",
+        "The key lies with the gnome.",
+        "Beware the shadows.",
+        "The amulet unlocks the final door."
+    ]
+    selected_clues = random.sample(possible_clues, 2)
+    for clue in selected_clues:
+        clues = find_clue(clues, clue)
+
+    if "staff_of_wisdom" in inventory:
+        print("With the Staff of Wisdom, you understand the clues and can bypass a puzzle or trap later.")
+        return input("Enter the name of the room you want to bypass: ").strip()
+    return None
+
+def enter_dungeon(player_stats, inventory, dungeon_rooms, clues, artifacts):
     """Iterates through each room in dungeon_rooms."""
     for room in dungeon_rooms:
         #Tuple unpacking
@@ -148,18 +164,7 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues):
                 inventory.insert(0, inventory.pop())  # Using insert() to add item at the beginning
 
         if challenge_type == "library":
-            possible_clues = [
-                "The treasure is hidden where the dragon sleeps.",
-                "The key lies with the gnome.",
-                "Beware the shadows.",
-                "The amulet unlocks the final door."
-            ]
-            Sclues = random.sample(possible_clues,2)
-            for clue in Sclues: # if clue exist in Sclues
-                clues = find_clue(clues, clue)
-            if "staff_of_wisdom" in inventory:
-                print("With the Staff of Wisdom, you understand the clues and can bypass a puzzle or a trap later!")
-                bypass = input("Enter the name of the room you want to bypass: ").strip()
+            bypass = handle_library(player_stats, inventory, clues)
 
 
         if challenge_type == "puzzle":
@@ -243,7 +248,7 @@ def main():
         artifact_name = random.choice(list(artifacts.keys()))
         player_stats, artifacts = discover_artifact(player_stats, artifacts, artifact_name)
 
-    player_stats, inventory, clues = enter_dungeon(player_stats, inventory, dungeon_rooms, clues)
+    player_stats, inventory, clues = enter_dungeon(player_stats, inventory, dungeon_rooms, clues, artifacts)
 
     print("\n--- Game End ---")
     print(f"Final Health: {player_stats['health']}, Attack: {player_stats['attack']}")
