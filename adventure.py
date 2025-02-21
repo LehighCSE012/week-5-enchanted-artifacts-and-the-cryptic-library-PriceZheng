@@ -173,7 +173,7 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues):
         bypass = None
         room_description, item, challenge_type, challenge_outcome = room
         print(f"{room_description}")
-        
+
         #Demonstrating tuple is immutability
         try:
             raise TypeError("Tuples are immutable and cannot be modified!")
@@ -190,7 +190,7 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues):
         if challenge_type == "library":
             bypass = handle_library(player_stats, inventory, clues)
 
-        player_stats = handle_challenge(player_stats, challenge_type, 
+        player_stats = handle_challenge(player_stats, challenge_type,
                                         challenge_outcome, room_description, bypass)
         player_stats['health'] = max(player_stats['health'], 0)
         display_inventory(inventory)
