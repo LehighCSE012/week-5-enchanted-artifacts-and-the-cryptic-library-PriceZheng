@@ -166,12 +166,10 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues, artifacts):
     """Iterates through each room in dungeon_rooms."""
     for room in dungeon_rooms:
         #Tuple unpacking
-        if not isinstance(room, tuple) or len(room) != 4:
-            print(f"Warning: Skipping invalid room tuple: {room}")
-            continue
-        if challenge_outcome is not None and not isinstance(challenge_outcome, tuple):
-            print(f"Warning: Skipping room due to invalid challenge outcome: {room}")
-            continue
+        if len(room) == 4:
+            room_description, item, challenge_type, challenge_outcome = room
+        else:
+            raise ValueError(f"Invalid room tuple: {room}")
         bypass = None
         room_description, item, challenge_type, challenge_outcome = room
         print(f"{room_description}")
@@ -181,7 +179,6 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues, artifacts):
             # randomly choose a unknow artifacts
             artifact_name = random.choice(list(artifacts.keys()))
             player_stats, artifacts = discover_artifact(player_stats, artifacts, artifact_name)
-        
         #Demonstrating tuple is immutability
         try:
             raise TypeError("Tuples are immutable and cannot be modified!")
