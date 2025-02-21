@@ -127,6 +127,7 @@ def handle_trap(player_stats, challenge_outcome):
     return player_stats
 
 def handle_library(player_stats, inventory, clues):
+    """Handle library"""
     possible_clues = [
         "The treasure is hidden where the dragon sleeps.",
         "The key lies with the gnome.",
@@ -138,9 +139,28 @@ def handle_library(player_stats, inventory, clues):
         clues = find_clue(clues, clue)
 
     if "staff_of_wisdom" in inventory:
-        print("With the Staff of Wisdom, you understand the clues and can bypass a puzzle or trap later.")
+        print("With the Staff of Wisdom, you can bypass a puzzle later.")
         return input("Enter the name of the room you want to bypass: ").strip()
     return None
+
+def handle_challenge(player_stats, challenge_type, challenge_outcome, room_description, bypass):
+    """Handle challenges for dungeon"""
+    if challenge_type == "puzzle":
+        if bypass and isinstance(bypass, str) and bypass in room_description:
+            print("You use your wisdom to bypass the puzzle in this room!")
+            if isinstance(challenge_outcome, tuple):
+                player_stats['health'] += challenge_outcome[2]
+        elif isinstance(challenge_outcome, tuple):
+            player_stats = handle_puzzle(player_stats, challenge_outcome)
+
+    elif challenge_type == "trap":
+        if isinstance(challenge_outcome, tuple):
+            player_stats = handle_trap(player_stats, challenge_outcome)
+
+    elif challenge_type == "none":
+        print("There doesn't seem to be a challenge in this room. You move on.")
+
+    return player_stats
 
 def enter_dungeon(player_stats, inventory, dungeon_rooms, clues, artifacts):
     """Iterates through each room in dungeon_rooms."""
@@ -152,14 +172,6 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues, artifacts):
         room_description, item, challenge_type, challenge_outcome = room
         print(f"{room_description}")
         
-        #aviod bypass is none
-        if bypass and isinstance(bypass, str):
-            if bypass in room_description:
-                print("You use your wisdom to bypass the puzzle in this room!")
-                if challenge_outcome and isinstance(challenge_outcome, tuple):
-                    player_stats['health'] += challenge_outcome[2]
-                continue
-            
         #Demonstrating tuple is immutability
         try:
             raise TypeError("Tuples are immutable and cannot be modified!")
@@ -176,31 +188,12 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues, artifacts):
         if challenge_type == "library":
             bypass = handle_library(player_stats, inventory, clues)
 
-
-        if challenge_type == "puzzle":
-            if bypass in room_description:
-                print("You use your wisdom to bypass the puzzle in this room!")
-                player_stats['health'] += challenge_outcome[2]  # Run result directly
-            else:
-                player_stats = handle_puzzle(player_stats, challenge_outcome)
-
-        elif challenge_type == "trap":
-            player_stats = handle_trap(player_stats, challenge_outcome)
-        elif challenge_type == "none":
-            print("There doesn't seem to be a challenge in this room. You move on.")
-
-        #Health check
-        if player_stats['health'] < 0:
-            player_stats['health'] = 0
-            print("You are barely alive!")
-
+        player_stats = handle_challenge(player_stats, challenge_type, challenge_outcome, room_description, bypass)
+        player_stats['health'] = max(player_stats['health'], 0)
         display_inventory(inventory)
-
-    display_player_status(player_stats['health'])
-    #Values(), get values, it it nor necessary to use it here, just use it
-    print("Player Final Stats:", list(player_stats.values()))
-
-    return player_stats, inventory
+        display_player_status(player_stats['health'])
+        print("Player Final Stats:", list(player_stats.values()))
+        return player_stats, inventory
 
 def main():
     """Initializes game variables and runs the adventure game."""
@@ -259,7 +252,6 @@ def main():
         player_stats, artifacts = discover_artifact(player_stats, artifacts, artifact_name)
 
     player_stats, inventory, clues = enter_dungeon(player_stats, inventory, dungeon_rooms, clues, artifacts)
-
     print("\n--- Game End ---")
     print(f"Final Health: {player_stats['health']}, Attack: {player_stats['attack']}")
     print(f"Final Inventory: {inventory}")
