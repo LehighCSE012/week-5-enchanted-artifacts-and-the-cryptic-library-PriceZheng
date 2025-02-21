@@ -162,7 +162,7 @@ def handle_challenge(player_stats, challenge_type, challenge_outcome, room_descr
 
     return player_stats
 
-def enter_dungeon(player_stats, inventory, dungeon_rooms, clues):
+def enter_dungeon(player_stats, inventory, dungeon_rooms, clues,artifacts):
     """Iterates through each room in dungeon_rooms."""
     for room in dungeon_rooms:
         #Tuple unpacking
@@ -188,7 +188,7 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues):
                 inventory.insert(0, inventory.pop())  # Using insert() to add item at the beginning
 
         if challenge_type == "library":
-            bypass = handle_library(player_stats, inventory, clues)
+            bypass = handle_library(inventory, clues)
 
         player_stats = handle_challenge(player_stats, challenge_type,
                                         challenge_outcome, room_description, bypass)
@@ -263,4 +263,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
