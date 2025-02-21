@@ -146,10 +146,20 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues, artifacts):
     """Iterates through each room in dungeon_rooms."""
     for room in dungeon_rooms:
         #Tuple unpacking
+        if len(room) != 4:
+            raise ValueError(f"Room tuple has incorrect length: {room}")
         bypass = None
         room_description, item, challenge_type, challenge_outcome = room
         print(f"{room_description}")
-
+        
+        #aviod bypass is none
+        if bypass and isinstance(bypass, str):
+            if bypass in room_description:
+                print("You use your wisdom to bypass the puzzle in this room!")
+                if challenge_outcome and isinstance(challenge_outcome, tuple):
+                    player_stats['health'] += challenge_outcome[2]
+                continue
+            
         #Demonstrating tuple is immutability
         try:
             raise TypeError("Tuples are immutable and cannot be modified!")
