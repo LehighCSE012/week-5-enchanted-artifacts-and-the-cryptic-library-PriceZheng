@@ -162,12 +162,14 @@ def handle_challenge(player_stats, challenge_type, challenge_outcome, room_descr
 
     return player_stats
 
-def enter_dungeon(player_stats, inventory, dungeon_rooms, clues, artifacts):
+def enter_dungeon(player_stats, inventory, dungeon_rooms, clues):
     """Iterates through each room in dungeon_rooms."""
     for room in dungeon_rooms:
         #Tuple unpacking
-        if len(room) != 4:
-            raise ValueError(f"Room tuple has incorrect length: {room}")
+        if len(room) == 4:
+            room_description, item, challenge_type, challenge_outcome = room
+        else:
+            raise ValueError(f"Invalid room tuple: {room}")
         bypass = None
         room_description, item, challenge_type, challenge_outcome = room
         print(f"{room_description}")
@@ -188,7 +190,8 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues, artifacts):
         if challenge_type == "library":
             bypass = handle_library(player_stats, inventory, clues)
 
-        player_stats = handle_challenge(player_stats, challenge_type, challenge_outcome, room_description, bypass)
+        player_stats = handle_challenge(player_stats, challenge_type, 
+                                        challenge_outcome, room_description, bypass)
         player_stats['health'] = max(player_stats['health'], 0)
         display_inventory(inventory)
         display_player_status(player_stats['health'])
@@ -197,7 +200,6 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues, artifacts):
 
 def main():
     """Initializes game variables and runs the adventure game."""
-    player_health = 100
     player_stats = {'health':100, 'attack':5}
     inventory = [] #String list
     clues = set()
@@ -250,8 +252,8 @@ def main():
     if random.random() < 0.3 and artifacts:
         artifact_name = random.choice(list(artifacts.keys()))
         player_stats, artifacts = discover_artifact(player_stats, artifacts, artifact_name)
-
-    player_stats, inventory, clues = enter_dungeon(player_stats, inventory, dungeon_rooms, clues, artifacts)
+    player_stats, inventory, clues = enter_dungeon(player_stats, inventory, dungeon_rooms,
+                                                   clues, artifacts)
     print("\n--- Game End ---")
     print(f"Final Health: {player_stats['health']}, Attack: {player_stats['attack']}")
     print(f"Final Inventory: {inventory}")
