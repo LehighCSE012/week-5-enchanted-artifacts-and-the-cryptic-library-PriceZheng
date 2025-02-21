@@ -9,10 +9,11 @@ def discover_artifact(player_stats, artifacts, artifact_name):
     if artifact_name in artifacts:
         artifact = artifacts.pop(artifact_name) #Pop the artifact and save it
         print(f"You discover the {artifact_name}: {artifact['description']}")
-        if artifact.get('effect') == "increase health": #Using get() to aviod keyError
+        effect = artifact.get('effect') #Using get() to aviod keyError
+        if effect == "increases health": 
             #Using update() to update health
             player_stats.update({'health': player_stats['health'] + artifact['power']})
-        elif artifact.get('effect') == "enhances attack":
+        elif effect == "enhances attack":
             player_stats['attack'] += artifact['power']
         print(f"Applied: {artifact['effect']}, +{artifact['power']}")
     else:
@@ -162,7 +163,7 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues):
         
         
         if challenge_type == "puzzle":
-            if bypass in room_description():
+            if bypass in room_description:
                 print("You use your wisdom to bypass the puzzle in this room!")
                 player_stats['health'] += challenge_outcome[2]  # Run result directly
             else:
